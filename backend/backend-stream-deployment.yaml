@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-stream
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-stream
+  template:
+    metadata:
+      labels:
+        app: backend-stream
+    spec:
+      containers:
+        - name: backend-stream
+          image: coderaritra/techno-gym-stream:latest
+          ports:
+            - containerPort: 9085
+            - containerPort: 9086
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              cd streamServer && go build -o gym-reg-backend && ./gym-reg-backend
+          envFrom:
+            - configMapRef:
+                name: backend-shared-config
+            - secretRef:
+                name: backend-shared-secret
+          env:
+            - name: PORT
+              value: "9085"  # Override if needed
+            - name: GRPC_WEB_PORT
+              value: "9086"

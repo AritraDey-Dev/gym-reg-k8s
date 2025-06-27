@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+data:
+  MYSQL_DATABASE: gym_reg
+  DB_PORT: "3306"
+  DATABASE_HOST: mysql
+  DB_URL: "gym-reg:gymreg2025@tcp(mysql)/gym-reg-v1?charset=utf8&parseTime=True&loc=Local"

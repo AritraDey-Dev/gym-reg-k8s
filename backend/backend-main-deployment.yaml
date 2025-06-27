@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-main
+  template:
+    metadata:
+      labels:
+        app: backend-main
+    spec:
+      containers:
+        - name: backend-main
+          image: coderaritra/techno-gym-main:latest
+          ports:
+            - containerPort: 9084
+            - containerPort: 9083
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              cd mainServer && go build -o gym-reg-backend && ./gym-reg-backend
+          envFrom:
+            - configMapRef:
+                name: backend-shared-config
+            - secretRef:
+                name: backend-shared-secret

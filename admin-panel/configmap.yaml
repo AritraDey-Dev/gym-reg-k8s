@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-panel-config
+  labels:
+    app: admin-panel
+data:
+  NEXT_PUBLIC_SITE_KEY: "6LephW0rAAAAAB2QyYFXJYom6vweqGMw5rpe2IXv"
+  NEXT_PUBLIC_HOST: "http://backend-main:9084"
+  NEXT_PUBLIC_HOST_STREAM: "http://backend-stream:9085"
+  NODE_ENV: "production"
+  PORT: "3002" 

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-panel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-panel
+  template:
+    metadata:
+      labels:
+        app: admin-panel
+    spec:
+      containers:
+        - name: admin-panel
+          image: coderaritra/gym-admin-panel:latest  # replace with actual image
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              if [ "$NODE_ENV" = "development" ]; then
+                npm run dev
+              else
+                npm run build && npm start
+              fi
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: admin-panel-config

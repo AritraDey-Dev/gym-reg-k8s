@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-stream
+spec:
+  selector:
+    app: backend-stream
+  ports:
+    - name: http
+      port: 9085
+      targetPort: 9085
+    - name: grpc-web
+      port: 9086
+      targetPort: 9086
+  type: ClusterIP

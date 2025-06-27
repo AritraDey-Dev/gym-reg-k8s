@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-shared-config
+data:
+  PORT: "9084"
+  GRPC_WEB_PORT: "9083"
+  STREAM_SERVER_PORT: "9085"
+  STREAM_SERVER_WEB_PORT: "9086"
+  ENV: "PROD"
+  DB_URL: "gym-reg:gymreg2025@tcp(mysql:3306)/gym-reg-v1?charset=utf8&parseTime=True&loc=Local"
+  REDIS_URL: "redis://:yourpassword@redis:6379"
+  RECAPTCHA_SECRET: "6LephW0rAAAAAII1nUTqBQmD8d9a_R51eoc6gyr9"
+  LCA_URI: "grpc.lcas.spider-nitt.org:443"
+  CA_CERT_FILE: "../ca-cert.pem"
+  TOKEN_EXPIRY: "86400"
+  DEPLOY_SERVER: "dev"
