@@ -27,7 +27,7 @@ spec:
           ports:
             - containerPort: 6379
           volumeMounts:
-            - name: redis-pv
+            - name: redis-storage
               mountPath: /data
           resources:
             requests:
@@ -37,5 +37,6 @@ spec:
               memory: "256Mi"
               cpu: "500m"
       volumes:
-        - name: redis-pv
-          emptyDir: {}
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc

@@ -14,16 +14,22 @@ spec:
     spec:
       containers:
         - name: backend-main
-          image: coderaritra/techno-gym-main:latest
+          image: coderaritra/techno-gym-stream:v3
           ports:
             - containerPort: 9084
             - containerPort: 9083
-          command: ["/bin/bash", "-c"]
-          args:
-            - |
-              cd mainServer && go build -o gym-reg-backend && ./gym-reg-backend
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+            limits:
+              cpu: 500m
+              memory: 200Mi
           envFrom:
             - configMapRef:
                 name: backend-shared-config
             - secretRef:
                 name: backend-shared-secret
+          env:
+            - name: ENV
+              value: "PROD"

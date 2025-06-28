@@ -14,14 +14,17 @@ spec:
     spec:
       containers:
         - name: backend-stream
-          image: coderaritra/techno-gym-stream:latest
+          image: coderaritra/techno-gym-main:v3
           ports:
             - containerPort: 9085
             - containerPort: 9086
-          command: ["/bin/bash", "-c"]
-          args:
-            - |
-              cd streamServer && go build -o gym-reg-backend && ./gym-reg-backend
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+            limits:
+              cpu: 500m
+              memory: 200Mi
           envFrom:
             - configMapRef:
                 name: backend-shared-config
@@ -29,6 +32,8 @@ spec:
                 name: backend-shared-secret
           env:
             - name: PORT
-              value: "9085"  # Override if needed
+              value: "9085"
             - name: GRPC_WEB_PORT
               value: "9086"
+            - name: ENV
+              value: "PROD"
