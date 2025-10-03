@@ -1,0 +1,99 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: frontend-authz
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: admin-panel-authz
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: admin-panel
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: backend-main-authz
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: backend-main
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: 
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+              - "cluster.local/ns/gym-reg/sa/default"
+      to:
+        - operation:
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: backend-stream-authz
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: backend-stream
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: 
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+              - "cluster.local/ns/gym-reg/sa/default"
+      to:
+        - operation:
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: mysql-authz
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces: ["gym-reg"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: redis-authz
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces: ["gym-reg"]

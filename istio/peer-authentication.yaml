@@ -1,0 +1,32 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: gym-reg
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: mysql-mtls
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  mtls:
+    mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: redis-mtls
+  namespace: gym-reg
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  mtls:
+    mode: PERMISSIVE

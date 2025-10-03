@@ -1,0 +1,39 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: backend-main
+  namespace: gym-reg
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gym-reg-gateway
+  http:
+    - match:
+        - uri:
+            prefix: "/api/main"
+      route:
+        - destination:
+            host: backend-main
+            port:
+              number: 9084
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: backend-stream
+  namespace: gym-reg
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gym-reg-gateway
+  http:
+    - match:
+        - uri:
+            prefix: "/api/stream"
+      route:
+        - destination:
+            host: backend-stream
+            port:
+              number: 9085
