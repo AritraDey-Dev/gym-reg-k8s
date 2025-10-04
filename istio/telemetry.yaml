@@ -1,0 +1,16 @@
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: default-telemetry
+  namespace: gym-reg
+spec:
+  metrics:
+    - providers:
+        - name: prometheus
+  tracing:
+    - providers:
+        - name: zipkin
+      randomSamplingPercentage: 100.0
+  accessLogging:
+    - providers:
+        - name: envoy

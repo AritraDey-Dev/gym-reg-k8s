@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: admin-panel
+  namespace: gym-reg
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gym-reg-gateway
+  http:
+    - match:
+        - uri:
+            prefix: "/admin"
+      route:
+        - destination:
+            host: admin-panel
+            port:
+              number: 3001
