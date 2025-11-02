@@ -9,4 +9,4 @@ data:
   NEXT_PUBLIC_HOST: "http://backend-main:9084"
   NEXT_PUBLIC_HOST_STREAM: "http://backend-stream:9085"
   NODE_ENV: "production"
-  PORT: "3002" 
+  PORT: "3001"
