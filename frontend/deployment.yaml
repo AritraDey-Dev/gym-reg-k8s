@@ -27,4 +27,4 @@ spec:
             - containerPort: 3000
           envFrom:
             - configMapRef:
-                name: admin-panel-config
+                name: frontend-config
