@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: backend-stream
-          image: coderaritra/techno-gym-main:v3
+          image: gym-reg-backend-stream:local
+          imagePullPolicy: Never
           ports:
             - containerPort: 9085
             - containerPort: 9086
@@ -30,10 +31,3 @@ spec:
                 name: backend-shared-config
             - secretRef:
                 name: backend-shared-secret
-          env:
-            - name: PORT
-              value: "9085"
-            - name: GRPC_WEB_PORT
-              value: "9086"
-            - name: ENV
-              value: "PROD"

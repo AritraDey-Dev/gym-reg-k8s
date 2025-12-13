@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: backend-main
-          image: coderaritra/techno-gym-stream:v3
+          image: gym-reg-backend-main:local
+          imagePullPolicy: Never
           ports:
             - containerPort: 9084
             - containerPort: 9083
@@ -33,3 +34,5 @@ spec:
           env:
             - name: ENV
               value: "PROD"
+
+
