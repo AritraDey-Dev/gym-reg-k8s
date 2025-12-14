@@ -1,4 +1,4 @@
-name: Kubernetes CI
+name: Autoscaling Verification
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  k8s-test:
+  autoscaling-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,9 +18,12 @@ jobs:
         with:
           cluster_name: gym-reg-ci
 
-      - name: Run Integration Test
+      - name: Deploy App & DBs (Setup)
         run: |
           chmod +x tests/ci-test.sh
           ./tests/ci-test.sh
 
-
+      - name: Run Autoscaling Test
+        run: |
+          chmod +x tests/autoscaling-test.sh
+          ./tests/autoscaling-test.sh
