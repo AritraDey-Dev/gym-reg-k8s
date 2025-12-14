@@ -18,13 +18,20 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - |
-              if [ "$NODE_ENV" = "development" ]; then
+              if [ "$NODE_ENV" = "production" ]; then
                 npm run dev
               else
                 npm run build && npm start
               fi
           ports:
             - containerPort: 3000
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1000m"
+          env:
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=2048"
           envFrom:
             - configMapRef:
                 name: frontend-config

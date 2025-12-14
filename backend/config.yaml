@@ -10,7 +10,7 @@ data:
   ENV: "PROD"
   DB_URL: "user:pass@tcp(mysql:3306)/gym_reg?charset=utf8&parseTime=True&loc=Local"
   REDIS_URL: "redis://:yourpassword@redis:6379"
-  RECAPTCHA_SECRET: "6LdEhiosAAAAAIcodN3eLENqhRjTkmVA2CjlgTF5"
+  RECAPTCHA_SECRET: "6LdzdyosAAAAAFHgi2co4F8CuvKDlYf_9I74aQKl"
   LCA_URI: "grpc.lcas.spider-nitt.org:443"
   CA_CERT_FILE: "/app/ca-cert.pem"
   TOKEN_EXPIRY: "86400"

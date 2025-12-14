@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: frontend-config
 data:
-  NEXT_PUBLIC_HOST: "http://backend-main:9084"
-  NEXT_PUBLIC_HOST_STREAM: "http://backend-stream:9085"
-  NEXT_PUBLIC_SITE_KEY: "your-site-key"
+  NEXT_PUBLIC_HOST: "http://localhost:9083"
+  NEXT_PUBLIC_HOST_STREAM: "http://localhost:9086"
+  NEXT_PUBLIC_SITE_KEY: "6LdzdyosAAAAAMzfm3vzEH8DGd6lAX2sWYHBFvTh"
   NODE_ENV: "production"
   PORT: "3000"

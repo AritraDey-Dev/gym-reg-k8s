@@ -12,10 +12,13 @@ spec:
       labels:
         app: backend-stream
     spec:
+      hostAliases:
+        - ip: "14.139.162.136"
+          hostnames:
+            - "grpc.lcas.spider-nitt.org"
       containers:
         - name: backend-stream
-          image: gym-reg-backend-stream:local
-          imagePullPolicy: Never
+          image: coderaritra/gym-reg-backend-stream:latest
           ports:
             - containerPort: 9085
             - containerPort: 9086
@@ -23,11 +26,16 @@ spec:
             requests:
               cpu: 200m
               memory: 100Mi
-            limits:
-              cpu: 500m
-              memory: 200Mi
           envFrom:
             - configMapRef:
                 name: backend-shared-config
             - secretRef:
                 name: backend-shared-secret
+          volumeMounts:
+            - name: ca-cert-volume
+              mountPath: /app/ca-cert.pem
+              subPath: ca-cert.pem
+      volumes:
+        - name: ca-cert-volume
+          configMap:
+            name: ca-cert-config

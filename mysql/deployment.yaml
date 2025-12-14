@@ -40,11 +40,8 @@ spec:
                   key: MYSQL_DATABASE
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "250m"
-            limits:
               memory: "512Mi"
-              cpu: "500m"
+              cpu: "250m"
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql

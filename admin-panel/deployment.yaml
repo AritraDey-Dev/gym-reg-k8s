@@ -25,6 +25,13 @@ spec:
               fi
           ports:
             - containerPort: 3001
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1000m"
+          env:
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=2048"
           envFrom:
             - configMapRef:
                 name: admin-panel-config
