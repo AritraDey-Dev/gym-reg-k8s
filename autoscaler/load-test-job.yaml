@@ -9,17 +9,17 @@ spec:
       - name: load-backend-main
         image: busybox
         command: ["/bin/sh"]
-        args: ["-c", "while true; do wget -q -O- http://backend-main:9084; done"]
+        args: ["-c", "for i in 1 2 3 4; do while true; do wget -q -O- http://backend-main:9084; done & done; wait"]
       - name: load-backend-stream
         image: busybox
         command: ["/bin/sh"]
-        args: ["-c", "while true; do wget -q -O- http://backend-stream:9085; done"]
+        args: ["-c", "for i in 1 2 3 4; do while true; do wget -q -O- http://backend-stream:9085; done & done; wait"]
       - name: load-frontend
         image: busybox
         command: ["/bin/sh"]
-        args: ["-c", "while true; do wget -q -O- http://frontend:3000; done"]
+        args: ["-c", "for i in 1 2 3 4; do while true; do wget -q -O- http://frontend:3000; done & done; wait"]
       - name: load-admin-panel
         image: busybox
         command: ["/bin/sh"]
-        args: ["-c", "while true; do wget -q -O- http://admin-panel:3001; done"]
+        args: ["-c", "for i in 1 2 3 4; do while true; do wget -q -O- http://admin-panel:3001; done & done; wait"]
       restartPolicy: Never
