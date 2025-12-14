@@ -15,71 +15,63 @@ echo "📊 Installing Metrics Server..."
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 # Patch for Kind (Insecure TLS)
 kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
-echo "⏳ Waiting for Metrics Server to be ready..."
-kubectl wait --for=condition=ready pod -l k8s-app=metrics-server -n kube-system --timeout=180s
+echo "⏳ Waiting for Metrics Server rollout..."
+kubectl -n kube-system rollout status deployment metrics-server --timeout=300s
 
-# 2. Apply HPAs
+# 2. Apply HPAs and Load Generator
 echo "⚖️ Applying HPA configurations..."
 kubectl apply -f autoscaler/
 
-# Function to test scaling
-test_scaling() {
-  SERVICE=$1
-  PORT=$2
+echo "🔥 Applying Load Generator Job..."
+# Ensure job is applied (in case it wasn't in autoscaler/ dir or needs re-apply)
+kubectl apply -f autoscaler/load-test-job.yaml
 
-  echo "---------------------------------------------------"
-  echo "🧪 Testing Autoscaling for $SERVICE..."
-  echo "---------------------------------------------------"
+# 3. Monitor Scaling
+echo "👀 Monitoring scaling for all services..."
+START_TIME=$(date +%s)
 
-  # Cleanup any existing load generator
-  kubectl delete pod "load-$SERVICE" --ignore-not-found=true
+SERVICES=("backend-main" "backend-stream" "frontend" "admin-panel")
+SCALED_SERVICES=()
 
-  # Get current replicas
-  INITIAL_REPLICAS=$(kubectl get deployment $SERVICE -o=jsonpath='{.status.replicas}')
-  echo "Current Replicas: $INITIAL_REPLICAS"
+while true; do
+  ALL_SCALED=true
+  
+  for SERVICE in "${SERVICES[@]}"; do
+    # Skip if already scaled
+    if [[ " ${SCALED_SERVICES[*]} " =~ " ${SERVICE} " ]]; then
+      continue
+    fi
 
-  # Start Load Generator
-  echo "🔥 Starting Load Generator for $SERVICE..."
-  kubectl run "load-$SERVICE" --image=busybox --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://$SERVICE:$PORT; done"
-
-  # Wait for scaling
-  START_TIME=$(date +%s)
-  while true; do
     CURRENT_REPLICAS=$(kubectl get deployment $SERVICE -o=jsonpath='{.status.replicas}')
-    
-    # Handle empty metrics (initially)
-    CPU_USAGE=$(kubectl get hpa "$SERVICE-hpa" -o=jsonpath='{.status.currentMetrics[0].resource.current.averageUtilization}')
-    if [ -z "$CPU_USAGE" ]; then CPU_USAGE="0"; fi
-
-    echo "Time: $(($(date +%s) - $START_TIME))s | Replicas: $CURRENT_REPLICAS | CPU: ${CPU_USAGE}%"
+    # Handle empty/error
+    if [ -z "$CURRENT_REPLICAS" ]; then CURRENT_REPLICAS=0; fi
 
     if [ "$CURRENT_REPLICAS" -ge "$TARGET_REPLICAS" ]; then
-      echo "✅ $SERVICE scaled to $CURRENT_REPLICAS replicas! Success."
-      break
+      echo "✅ $SERVICE scaled to $CURRENT_REPLICAS replicas!"
+      SCALED_SERVICES+=("$SERVICE")
+    else
+      ALL_SCALED=false
+      # Get CPU usage for logging
+      CPU_USAGE=$(kubectl get hpa "${SERVICE}-hpa" -o=jsonpath='{.status.currentMetrics[0].resource.current.averageUtilization}')
+      echo "   $SERVICE: Replicas=$CURRENT_REPLICAS/$TARGET_REPLICAS | CPU=${CPU_USAGE:-0}%"
     fi
-
-    if [ $(($(date +%s) - $START_TIME)) -gt $TIMEOUT ]; then
-      echo "❌ Timeout waiting for $SERVICE to scale."
-      kubectl get hpa "$SERVICE-hpa"
-      kubectl describe hpa "$SERVICE-hpa"
-      kubectl logs "load-$SERVICE"
-      kubectl delete pod "load-$SERVICE" --force --grace-period=0
-      exit 1
-    fi
-
-    sleep 10
   done
 
-  # Cleanup Load Generator
-  echo "🧹 Stopping Load Generator..."
-  kubectl delete pod "load-$SERVICE" --force --grace-period=0
-}
+  if [ "$ALL_SCALED" = true ]; then
+    echo "🎉 All services scaled successfully!"
+    break
+  fi
 
-# 3. Run Tests sequentially
-# Note: Ports must match the Service ports
-test_scaling "backend-main" 9084
-test_scaling "backend-stream" 9085
-test_scaling "frontend" 3000
-test_scaling "admin-panel" 3001
+  if [ $(($(date +%s) - $START_TIME)) -gt $TIMEOUT ]; then
+    echo "❌ Timeout waiting for services to scale."
+    echo "Scaled so far: ${SCALED_SERVICES[*]}"
+    kubectl get hpa
+    kubectl get pods
+    exit 1
+  fi
 
-echo "🎉 All Autoscaling Tests Passed!"
+  sleep 15
+done
+
+# Cleanup
+kubectl delete -f autoscaler/load-test-job.yaml
