@@ -88,6 +88,14 @@ A: Yes, but it is **not recommended** for this setup.
 A: **NO.**
 *   **Local (Kind/Minikube):** Yes, you use `port-forward` because your local cluster doesn't have a real public IP.
 *   **Production (Cloud):** No. The Ingress Controller provides a **Public IP**. You map your domain (e.g., `gym.com`) to this IP. Users access the website directly via the domain. `port-forward` is only used for debugging.
+
+### G. Do Services need Port-Forward to talk to each other?
+**Q: Does Frontend need port-forward to talk to Backend?**
+A: **NO.**
+*   **Inside the Cluster:** Services talk to each other using their Service Names (DNS).
+    *   Frontend calls `http://backend-main:9084` (Internal DNS).
+    *   **No port-forward needed.**
+*   **Outside the Cluster (You):** Only **YOU** need port-forward (or Ingress) to see the app from your browser.
 ```
 
 ## 2. Storage & Databases
