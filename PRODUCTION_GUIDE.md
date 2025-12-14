@@ -82,6 +82,12 @@ spec:
 A: Yes, but it is **not recommended** for this setup.
 *   **LoadBalancer:** Creates a separate Cloud Load Balancer (and bill) for *each* service. You would have 3 LBs, 3 IPs, and have to manage SSL for each.
 *   **Ingress:** Creates **one** Cloud Load Balancer that routes to all your services. Cheaper, easier SSL management, and cleaner DNS.
+
+### F. Accessing the App (Production vs Local)
+**Q: Do I need `kubectl port-forward` in production?**
+A: **NO.**
+*   **Local (Kind/Minikube):** Yes, you use `port-forward` because your local cluster doesn't have a real public IP.
+*   **Production (Cloud):** No. The Ingress Controller provides a **Public IP**. You map your domain (e.g., `gym.com`) to this IP. Users access the website directly via the domain. `port-forward` is only used for debugging.
 ```
 
 ## 2. Storage & Databases
