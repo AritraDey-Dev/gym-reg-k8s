@@ -7,6 +7,8 @@ To serve your application on a real domain (e.g., `gym.example.com`) with HTTPS,
 
 ### A. Install NGINX Ingress Controller
 The Ingress Controller sits at the edge of your cluster and routes traffic to your services.
+**Important:** Keep your backend/frontend services as `ClusterIP`. The Ingress Controller itself will be of type `LoadBalancer` and will handle external traffic, routing it internally to your ClusterIP services. This saves costs (one LoadBalancer vs many).
+
 ```bash
 # For most cloud providers (AWS, GKE, Azure)
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
@@ -74,6 +76,12 @@ spec:
             name: backend-main
             port:
               number: 9084
+
+### E. FAQ: Why Ingress instead of LoadBalancer?
+**Q: Can I just set `type: LoadBalancer` for my services?**
+A: Yes, but it is **not recommended** for this setup.
+*   **LoadBalancer:** Creates a separate Cloud Load Balancer (and bill) for *each* service. You would have 3 LBs, 3 IPs, and have to manage SSL for each.
+*   **Ingress:** Creates **one** Cloud Load Balancer that routes to all your services. Cheaper, easier SSL management, and cleaner DNS.
 ```
 
 ## 2. Storage & Databases
