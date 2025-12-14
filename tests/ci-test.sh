@@ -38,25 +38,49 @@ else
   kubectl apply -f backend/ca-cert-configmap.yaml --context kind-"$CLUSTER_NAME"
 fi
 
-# 4. Apply Manifests
-echo "📄 Applying Kubernetes manifests..."
-kubectl apply -f backend/config.yaml --context kind-"$CLUSTER_NAME"
-kubectl apply -f frontend/configmap.yaml --context kind-"$CLUSTER_NAME"
-kubectl apply -f admin-panel/configmap.yaml --context kind-"$CLUSTER_NAME"
-
+# 4. Apply Database Manifests
+echo "�️ Applying Database manifests (MySQL & Redis)..."
 kubectl apply -f mysql/ --context kind-"$CLUSTER_NAME"
 kubectl apply -f redis/ --context kind-"$CLUSTER_NAME"
+
+echo "⏳ Waiting for Databases to be ready..."
+kubectl wait --for=condition=ready pod -l app=mysql --timeout=600s --context kind-"$CLUSTER_NAME"
+kubectl wait --for=condition=ready pod -l app=redis --timeout=600s --context kind-"$CLUSTER_NAME"
+
+# 5. Apply Backend Manifests
+echo "⚙️ Applying Backend manifests..."
+kubectl apply -f backend/config.yaml --context kind-"$CLUSTER_NAME"
 kubectl apply -f backend/backend-main-deployment.yaml --context kind-"$CLUSTER_NAME"
 kubectl apply -f backend/backend-stream-deployment.yaml --context kind-"$CLUSTER_NAME"
+
+echo "⏳ Waiting for Backends to be ready..."
+kubectl wait --for=condition=ready pod -l app=backend-main --timeout=600s --context kind-"$CLUSTER_NAME"
+kubectl wait --for=condition=ready pod -l app=backend-stream --timeout=600s --context kind-"$CLUSTER_NAME"
+
+# 6. Apply Frontend Manifests
+echo "💻 Applying Frontend & Admin manifests..."
+kubectl apply -f frontend/configmap.yaml --context kind-"$CLUSTER_NAME"
+kubectl apply -f admin-panel/configmap.yaml --context kind-"$CLUSTER_NAME"
 kubectl apply -f frontend/deployment.yaml --context kind-"$CLUSTER_NAME"
 kubectl apply -f admin-panel/deployment.yaml --context kind-"$CLUSTER_NAME"
 
-# 5. Wait for Rollout
-echo "⏳ Waiting for pods to be ready (Timeout: 5m)..."
-kubectl wait --for=condition=ready pod --all --timeout=300s --context kind-"$CLUSTER_NAME"
+echo "⏳ Waiting for Frontend/Admin to be ready..."
+kubectl wait --for=condition=ready pod -l app=frontend --timeout=600s --context kind-"$CLUSTER_NAME"
+kubectl wait --for=condition=ready pod -l app=admin-panel --timeout=600s --context kind-"$CLUSTER_NAME"
 
-# 6. Verification
-echo "✅ Checking Pod Status..."
+# 7. Stability Check
+echo "🕵️ Checking for stability (waiting 30s)..."
+sleep 30
 kubectl get pods --context kind-"$CLUSTER_NAME"
 
-echo "🎉 CI Test Passed! All pods are running."
+# Check for restarts
+RESTARTS=$(kubectl get pods --context kind-"$CLUSTER_NAME" --no-headers | awk '{print $4}' | awk '{s+=$1} END {print s}')
+if [ "$RESTARTS" -gt 0 ]; then
+  echo "❌ Detected $RESTARTS restarts! Test Failed."
+  kubectl get pods --context kind-"$CLUSTER_NAME"
+  exit 1
+else
+  echo "✅ No restarts detected."
+fi
+
+echo "🎉 CI Test Passed! All pods are running and stable."
