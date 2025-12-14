@@ -24,10 +24,10 @@ kubectl apply -f autoscaler/
 
 # Patch HPAs to 5% to ensure scaling in CI
 echo "🔧 Patching HPA targets to 5% for test..."
-kubectl patch hpa backend-main-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 5}]'
-kubectl patch hpa backend-stream-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 5}]'
-kubectl patch hpa frontend-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 5}]'
-kubectl patch hpa admin-panel-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 5}]'
+kubectl patch hpa backend-main-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 2}]'
+kubectl patch hpa backend-stream-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 2}]'
+kubectl patch hpa frontend-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 2}]'
+kubectl patch hpa admin-panel-hpa --type='json' -p='[{"op": "replace", "path": "/spec/metrics/0/resource/target/averageUtilization", "value": 2}]'
 
 echo "🔥 Applying Load Generator Job..."
 # Ensure job is applied (in case it wasn't in autoscaler/ dir or needs re-apply)
