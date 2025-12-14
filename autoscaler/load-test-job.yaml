@@ -6,8 +6,20 @@ spec:
   template:
     spec:
       containers:
-      - name: load-generator
+      - name: load-backend-main
         image: busybox
         command: ["/bin/sh"]
         args: ["-c", "while true; do wget -q -O- http://backend-main:9084; done"]
+      - name: load-backend-stream
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do wget -q -O- http://backend-stream:9085; done"]
+      - name: load-frontend
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do wget -q -O- http://frontend:3000; done"]
+      - name: load-admin-panel
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do wget -q -O- http://admin-panel:3001; done"]
       restartPolicy: Never

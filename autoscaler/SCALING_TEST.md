@@ -10,11 +10,20 @@ kubectl apply -f autoscaler/backend-main-hpa.yaml
 ```
 
 ## 2. Start Monitoring
-Open a new terminal and watch the HPA status:
+Open separate terminals to watch the HPA status for all services:
 ```bash
 kubectl get hpa backend-main-hpa -w
 ```
-*Initially, it should show `REPLICAS: 1` and `TARGETS: <unknown>/70%` or `0%/70%`.*
+```bash
+kubectl get hpa backend-stream-hpa -w
+```
+```bash
+kubectl get hpa frontend-hpa -w
+```
+```bash
+kubectl get hpa admin-panel-hpa -w
+```
+*Initially, all should show `REPLICAS: 1` and `TARGETS: <unknown>/70%` or `0%/70%`.*
 
 ## 3. Generate Load
 Apply the load generator job. This creates a pod that spams requests to your backend.
@@ -24,11 +33,11 @@ kubectl apply -f autoscaler/load-test-job.yaml
 
 ## 4. Observe Scaling
 Wait for 1-2 minutes.
-1.  You will see the `TARGETS` CPU % rise above 70% (e.g., `150%/70%`).
+1.  You will see the `TARGETS` CPU % rise above 70% for **all** services.
 2.  The `REPLICAS` count will increase (e.g., `1 -> 2 -> 4`).
 3.  Check the pods:
     ```bash
-    kubectl get pods -l app=backend-main
+    kubectl get pods
     ```
 
 ## 5. Stop the Test
