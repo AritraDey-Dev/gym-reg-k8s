@@ -147,6 +147,44 @@ Automatically adds more pods when CPU/Memory usage is high.
          target:
            type: Utilization
            averageUtilization: 70
+   ---
+   apiVersion: autoscaling/v2
+   kind: HorizontalPodAutoscaler
+   metadata:
+     name: frontend-hpa
+   spec:
+     scaleTargetRef:
+       apiVersion: apps/v1
+       kind: Deployment
+       name: frontend
+     minReplicas: 2
+     maxReplicas: 10
+     metrics:
+     - type: Resource
+       resource:
+         name: cpu
+         target:
+           type: Utilization
+           averageUtilization: 70
+   ---
+   apiVersion: autoscaling/v2
+   kind: HorizontalPodAutoscaler
+   metadata:
+     name: admin-panel-hpa
+   spec:
+     scaleTargetRef:
+       apiVersion: apps/v1
+       kind: Deployment
+       name: admin-panel
+     minReplicas: 2
+     maxReplicas: 10
+     metrics:
+     - type: Resource
+       resource:
+         name: cpu
+         target:
+           type: Utilization
+           averageUtilization: 70
    ```
 
 ### B. Resource Requests & Limits

@@ -40,6 +40,8 @@ Then apply the HPA configurations from the `autoscaler` directory:
 ```bash
 kubectl apply -f autoscaler/backend-main-hpa.yaml
 kubectl apply -f autoscaler/backend-stream-hpa.yaml
+kubectl apply -f autoscaler/frontend-hpa.yaml
+kubectl apply -f autoscaler/admin-panel-hpa.yaml
 ```
 
 ## 📝 Checklist
