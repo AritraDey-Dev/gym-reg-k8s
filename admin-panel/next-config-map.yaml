@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-panel-next-config
+data:
+  next.config.js: |
+    /** @type {import('next').NextConfig} */
+    const nextConfig = {
+      reactStrictMode: true,
+      distDir: "build",
+      basePath: process.env.BASE_PATH || '',
+    };
+
+    module.exports = nextConfig;

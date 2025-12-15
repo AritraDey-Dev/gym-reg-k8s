@@ -1,0 +1,21 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "l7-visibility-backend-main"
+spec:
+  endpointSelector:
+    matchLabels:
+      app: backend-main
+  ingress:
+  - toPorts:
+    - ports:
+      - port: "9083"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+          path: "/health"
+  - toPorts:
+    - ports:
+      - port: "9084"
+        protocol: TCP

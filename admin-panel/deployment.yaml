@@ -35,3 +35,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: admin-panel-config
+          volumeMounts:
+            - name: next-config-volume
+              mountPath: /app/next.config.js
+              subPath: next.config.js
+      volumes:
+        - name: next-config-volume
+          configMap:
+            name: admin-panel-next-config

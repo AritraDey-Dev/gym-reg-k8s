@@ -1,0 +1,54 @@
+name: Cilium Connectivity Test
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'cluster/**'
+      - 'cilium/**'
+      - '.github/workflows/cilium-connectivity.yaml'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'cluster/**'
+      - 'cilium/**'
+      - '.github/workflows/cilium-connectivity.yaml'
+  workflow_dispatch:
+
+jobs:
+  cilium-connectivity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create Kind Cluster
+        uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: gym-reg-ci
+          config: cluster/cluster.yaml
+
+      - name: Install Cilium CLI
+        uses: cilium/cilium-cli-action@v1
+        with:
+          release-version: v0.16.20
+          ci-version: v1.16.1
+
+      - name: Install Cilium
+        run: |
+          cilium install --version 1.16.1 --wait=false
+          cilium status --wait
+
+      - name: Enable Hubble
+        run: |
+          cilium hubble enable
+          cilium status --wait
+
+      - name: Deploy Application Stack
+        run: |
+          chmod +x tests/ci-test.sh
+          ./tests/ci-test.sh
+
+      - name: Run Connectivity Test
+        run: |
+          cilium connectivity test

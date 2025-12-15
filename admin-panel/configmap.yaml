@@ -6,7 +6,8 @@ metadata:
     app: admin-panel
 data:
   NEXT_PUBLIC_SITE_KEY: "6LdzdyosAAAAAMzfm3vzEH8DGd6lAX2sWYHBFvTh"
-  NEXT_PUBLIC_HOST: "http://localhost:9083"
-  NEXT_PUBLIC_HOST_STREAM: "http://localhost:9086"
+  NEXT_PUBLIC_HOST: "/api/main"
+  NEXT_PUBLIC_HOST_STREAM: "/api/stream"
+  BASE_PATH: "/admin"
   NODE_ENV: "production"
   PORT: "3001"
