@@ -49,7 +49,7 @@ Before setting up the project locally, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/AritraDey-Dev/gym-reg-k8s.git
+git clone https://github.com/AritraDey-Dev/k8s-infra.git
 cd gym-reg-k8s
 ```
 
