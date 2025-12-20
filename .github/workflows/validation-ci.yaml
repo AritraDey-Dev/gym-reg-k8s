@@ -1,0 +1,57 @@
+name: Validation CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  lint-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Install yamllint
+      - name: Install yamllint
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install yamllint
+
+      # Lint all YAML files
+      - name: Run yamllint on all *.yaml files
+        run: |
+          yamllint -d "{extends: default, rules: {line-length: {max: 120}}}" -s $(git ls-files "*.yaml" "*.yml")
+
+      # Install kubeval
+      - name: Install kubeval
+        run: |
+          curl -sSL -o /usr/local/bin/kubeval https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64
+          chmod +x /usr/local/bin/kubeval
+
+      # Validate manifests with kubeval
+      - name: Run kubeval on all manifests
+        run: |
+          for f in $(git ls-files "*.yaml" "*.yml"); do
+            kubeval "$f" || exit 1
+          done
+
+      # Install kube-score
+      - name: Install kube-score
+        run: |
+          curl -sSL -o /usr/local/bin/kube-score https://github.com/zegl/kube-score/releases/latest/download/kube-score_linux_amd64
+          chmod +x /usr/local/bin/kube-score
+
+      # Run kube-score on all manifests
+      - name: Run kube-score on all manifests
+        run: |
+          for f in $(git ls-files "*.yaml" "*.yml"); do
+            kube-score score "$f" || exit 1
+          done
+
+      # # Helm lint (if a Helm chart exists)
+      # - name: Helm lint (optional)
+      #   if: exists('Chart.yaml')
+      #   run: |
+      #     helm lint .
