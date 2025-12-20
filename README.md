@@ -166,6 +166,7 @@ Apply admin panel configurations:
 
 ```bash
 kubectl apply -f admin-panel/configmap.yaml
+kubectl apply -f admin-panel/next-config-map.yaml
 kubectl apply -f admin-panel/deployment.yaml
 kubectl apply -f admin-panel/service.yaml
 ```

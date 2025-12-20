@@ -63,6 +63,7 @@ kubectl wait --for=condition=ready pod -l app=backend-stream --timeout=600s --co
 echo "💻 Applying Frontend & Admin manifests..."
 kubectl apply -f frontend/configmap.yaml --context kind-"$CLUSTER_NAME"
 kubectl apply -f admin-panel/configmap.yaml --context kind-"$CLUSTER_NAME"
+kubectl apply -f admin-panel/next-config-map.yaml --context kind-"$CLUSTER_NAME"
 
 echo "⏳ Waiting for ConfigMaps to propagate..."
 sleep 10
