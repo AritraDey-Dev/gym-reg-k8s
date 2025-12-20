@@ -21,7 +21,7 @@ data:
             if ($http_user_agent ~* "kube-probe") { access_log off; }
             # double `/index.html` is required here
             try_files $uri $uri/ /index.html /index.html;
-            
+
             # Rewrite HTML content to prepend /hubble
             sub_filter 'href="/' 'href="/hubble/';
             sub_filter 'src="/' 'src="/hubble/';

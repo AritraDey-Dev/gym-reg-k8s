@@ -10,4 +10,4 @@ spec:
   hostPath:
     path: /mnt/data/redis
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual 
+  storageClassName: manual
