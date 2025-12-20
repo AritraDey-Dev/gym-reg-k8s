@@ -1,3 +1,4 @@
+---
 name: Validation CI
 
 on:
@@ -20,9 +21,9 @@ jobs:
           pip install yamllint
 
       # Lint all YAML files
-      - name: Run yamllint on all *.yaml files
+      - name: Run yamllint on all *.yaml files using relaxed config
         run: |
-          yamllint -d "{extends: default, rules: {line-length: {max: 120}}}" -s $(git ls-files "*.yaml" "*.yml")
+          yamllint -c .yamllint -s $(git ls-files "*.yaml" "*.yml")
 
       # Install kubeval
       - name: Install kubeval

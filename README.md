@@ -1,6 +1,7 @@
 # K8s Infra
 
 ![Kubernetes CI](https://github.com/AritraDey-Dev/gym-reg-k8s/actions/workflows/k8s-ci.yaml/badge.svg)
+![Cilium Connectivity](https://github.com/AritraDey-Dev/gym-reg-k8s/actions/workflows/cilium-connectivity.yaml/badge.svg)
 
 A complete Kubernetes deployment configuration for a gym registration system with backend services, frontend, admin panel, MySQL database, and Redis cache.
 
