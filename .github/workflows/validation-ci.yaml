@@ -28,8 +28,10 @@ jobs:
       # Install kubeval
       - name: Install kubeval
         run: |
-          curl -sSL -o /usr/local/bin/kubeval https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64
-          chmod +x /usr/local/bin/kubeval
+          mkdir -p $HOME/.local/bin
+          curl -L -o $HOME/.local/bin/kubeval https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64
+          chmod +x $HOME/.local/bin/kubeval
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       # Validate manifests with kubeval
       - name: Run kubeval on all manifests
