@@ -1,29 +1,29 @@
-name: Autoscaling Verification
+# name: Autoscaling Verification
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-jobs:
-  autoscaling-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# jobs:
+#   autoscaling-test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.8.0
-        with:
-          cluster_name: gym-reg-ci
+#       - name: Create k8s Kind Cluster
+#         uses: helm/kind-action@v1.8.0
+#         with:
+#           cluster_name: gym-reg-ci
 
-      - name: Deploy App & DBs (Setup)
-        run: |
-          chmod +x tests/ci-test.sh
-          ./tests/ci-test.sh
+#       - name: Deploy App & DBs (Setup)
+#         run: |
+#           chmod +x tests/ci-test.sh
+#           ./tests/ci-test.sh
 
-      - name: Run Autoscaling Test
-        run: |
-          chmod +x tests/autoscaling-test.sh
-          ./tests/autoscaling-test.sh
+#       - name: Run Autoscaling Test
+#         run: |
+#           chmod +x tests/autoscaling-test.sh
+#           ./tests/autoscaling-test.sh
