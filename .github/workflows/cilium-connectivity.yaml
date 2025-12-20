@@ -3,16 +3,8 @@ name: Cilium Connectivity Test
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'cluster/**'
-      - 'cilium/**'
-      - '.github/workflows/cilium-connectivity.yaml'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'cluster/**'
-      - 'cilium/**'
-      - '.github/workflows/cilium-connectivity.yaml'
   workflow_dispatch:
 
 jobs:
