@@ -1,0 +1,20 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: db-access-policy
+  namespace: default
+spec:
+  endpointSelector:
+    matchExpressions:
+      - {key: app, operator: In, values: [mysql, redis]}
+  ingress:
+  - fromEndpoints:
+    - matchExpressions:
+      - {key: app, operator: In, values: [backend-main, backend-stream]}
+  egress:
+  - toEntities:
+    - world # Allow egress to world if needed (e.g. updates), or restrict to cluster
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kube-system
+        k8s-app: kube-dns

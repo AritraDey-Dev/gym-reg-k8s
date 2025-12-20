@@ -1,0 +1,21 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: frontend-access-policy
+  namespace: default
+spec:
+  endpointSelector:
+    matchExpressions:
+      - {key: app, operator: In, values: [frontend, admin-panel]}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app.kubernetes.io/name: ingress-nginx
+        io.kubernetes.pod.namespace: ingress-nginx
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kube-system
+        k8s-app: kube-dns
+  - toEntities:
+    - world # Frontend might need to fetch external assets (though usually client-side)

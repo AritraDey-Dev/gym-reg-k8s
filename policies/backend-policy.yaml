@@ -1,0 +1,24 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: backend-access-policy
+  namespace: default
+spec:
+  endpointSelector:
+    matchExpressions:
+      - {key: app, operator: In, values: [backend-main, backend-stream]}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app.kubernetes.io/name: ingress-nginx
+        io.kubernetes.pod.namespace: ingress-nginx
+  egress:
+  - toEndpoints:
+    - matchExpressions:
+        - {key: app, operator: In, values: [mysql, redis]}
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kube-system
+        k8s-app: kube-dns
+  - toEntities:
+    - world # Backend might need to reach external APIs (e.g. Google Auth)

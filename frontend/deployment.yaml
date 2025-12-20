@@ -18,7 +18,7 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - |
-              if [ "$NODE_ENV" = "production" ]; then
+              if [ "$NODE_ENV" = "development" ]; then
                 npm run dev
               else
                 npm run build && npm start
@@ -28,7 +28,7 @@ spec:
           resources:
             requests:
               memory: "1Gi"
-              cpu: "1000m"
+              cpu: "250m"
           env:
             - name: NODE_OPTIONS
               value: "--max-old-space-size=2048"

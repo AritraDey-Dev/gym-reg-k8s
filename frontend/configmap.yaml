@@ -5,6 +5,6 @@ metadata:
 data:
   NEXT_PUBLIC_HOST: "/api/main"
   NEXT_PUBLIC_HOST_STREAM: "/api/stream"
-  NEXT_PUBLIC_SITE_KEY: "6LdzdyosAAAAAMzfm3vzEH8DGd6lAX2sWYHBFvTh"
+  NEXT_PUBLIC_SITE_KEY: "6Lf8xCwsAAAAALdb6EZK71zT09OEdhU5RmX-_6Pk"
   NODE_ENV: "production"
   PORT: "3000"

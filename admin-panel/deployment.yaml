@@ -28,7 +28,7 @@ spec:
           resources:
             requests:
               memory: "1Gi"
-              cpu: "1000m"
+              cpu: "250m"
           env:
             - name: NODE_OPTIONS
               value: "--max-old-space-size=2048"

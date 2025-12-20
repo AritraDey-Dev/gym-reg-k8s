@@ -8,7 +8,7 @@ data:
     const nextConfig = {
       reactStrictMode: true,
       distDir: "build",
-      basePath: process.env.BASE_PATH || '',
+      basePath: '/admin',
     };
 
     module.exports = nextConfig;

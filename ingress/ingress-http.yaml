@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: gym-reg-ingress-http
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /admin$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
@@ -20,7 +20,7 @@ spec:
             name: frontend
             port:
               number: 3000
-      - path: (/admin)(/|$)(.*)
+      - path: /admin(/|$)(.*)
         pathType: ImplementationSpecific
         backend:
           service:
