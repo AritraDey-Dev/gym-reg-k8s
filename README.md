@@ -1,7 +1,6 @@
 # K8s Infra
 
 ![Kubernetes CI](https://github.com/AritraDey-Dev/gym-reg-k8s/actions/workflows/k8s-ci.yaml/badge.svg)
-![Autoscaling Verification](https://github.com/AritraDey-Dev/gym-reg-k8s/actions/workflows/autoscaling-ci.yaml/badge.svg)
 
 A complete Kubernetes deployment configuration for a gym registration system with backend services, frontend, admin panel, MySQL database, and Redis cache.
 
