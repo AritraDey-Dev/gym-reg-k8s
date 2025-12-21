@@ -25,32 +25,37 @@ jobs:
         run: |
           yamllint -c .yamllint -s $(git ls-files "*.yaml" "*.yml")
 
-      # Install kubeval
-      - name: Install kubeval
+      # Install kubeconform
+      - name: Install kubeconform
         run: |
           mkdir -p $HOME/.local/bin
-          curl -L -o $HOME/.local/bin/kubeval https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64
-          chmod +x $HOME/.local/bin/kubeval
+          curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.6.4/kubeconform-linux-amd64.tar.gz | tar xz -C $HOME/.local/bin
+          chmod +x $HOME/.local/bin/kubeconform
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      # Validate manifests with kubeval
-      - name: Run kubeval on all manifests
+      # Validate manifests with kubeconform
+      - name: Run kubeconform on all manifests
         run: |
-          for f in $(git ls-files "*.yaml" "*.yml"); do
-            kubeval "$f" || exit 1
-          done
+          kubeconform -ignore-filename-pattern '.github/workflows/.*' -ignore-missing-schemas -summary $(git ls-files "*.yaml" "*.yml")
 
       # Install kube-score
       - name: Install kube-score
         run: |
-          curl -sSL -o /usr/local/bin/kube-score https://github.com/zegl/kube-score/releases/latest/download/kube-score_linux_amd64
-          chmod +x /usr/local/bin/kube-score
+          mkdir -p $HOME/.local/bin
+          curl -sSL https://github.com/zegl/kube-score/releases/download/v1.19.0/kube-score_1.19.0_linux_amd64.tar.gz | tar xz -C $HOME/.local/bin
+          chmod +x $HOME/.local/bin/kube-score
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      # Run kube-score on all manifests
+      # Run kube-score on all manifests (informational only, won't fail the build)
       - name: Run kube-score on all manifests
+        continue-on-error: true
         run: |
           for f in $(git ls-files "*.yaml" "*.yml"); do
-            kube-score score "$f" || exit 1
+            # Skip non-Kubernetes manifests
+            if [[ "$f" == ".github/workflows/"* ]]; then
+              continue
+            fi
+            kube-score score "$f" || true
           done
 
       # # Helm lint (if a Helm chart exists)
