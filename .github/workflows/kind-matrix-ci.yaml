@@ -21,6 +21,7 @@ jobs:
         with:
           # Use kindest/node image for the specific version
           node_image: kindest/node:v${{ matrix.k8s_version }}
+          cluster_name: gym-reg-ci
 
       - name: Load Docker images (if any)
         run: |
