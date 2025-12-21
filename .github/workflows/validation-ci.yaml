@@ -52,7 +52,7 @@ jobs:
         run: |
           for f in $(git ls-files "*.yaml" "*.yml"); do
             # Skip non-Kubernetes manifests
-            if [[ "$f" == .github/workflows/* ]]; then
+            if [[ "$f" == ".github/workflows/"* ]]; then
               continue
             fi
             kube-score score "$f" || true
