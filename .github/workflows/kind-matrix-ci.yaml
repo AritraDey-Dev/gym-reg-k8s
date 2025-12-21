@@ -1,0 +1,33 @@
+name: Kind Matrix CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  kind-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        k8s_version: ["1.25", "1.26", "1.27", "1.28", "1.29"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kind
+        uses: helm/kind-action@v1.5.0
+        with:
+          version: ${{ matrix.k8s_version }}
+          # Use kindest/node image for the specific version
+          node_image: kindest/node:v${{ matrix.k8s_version }}
+
+      - name: Load Docker images (if any)
+        run: |
+          # Example: build and load your images into kind
+          echo "No custom images to load"
+
+      - name: Run CI tests
+        run: |
+          ./tests/ci-test.sh
